@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Welcome to Inventory Management Solutions</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/stylesheet" href="styles.css">
+    <!-- <script src="scripts.js"></script> -->
+    <script>
+
+        $(document).ready(function () {
+            //Display Dashboard
+            $("#Dashboard").show();
+            //Display Stock Details.
+            $.ajax(
+                {
+                    url: '/stock/',
+                    dataType: 'json',
+                    data: JSON.stringify({ name: 'Chandu' }),
+                    success: function (result) {
+                        var str = result;
+                                var text = "<table class='table-responsive-sm table-hover' border=1><tr><th>Customer</th><th>Product</th><th>Quantity</th><th>Price</th><th>Date</th><th>Transaction Type</th></tr>";
+                                $.each(str, function (key, value) {
+                                    text += "<tr><td>" + value["customer"] + "</td>";
+                                    text += "<td>" + value["product"] + "</td>";
+                                    text += "<td>" + value["quantity"] + "</td>";
+                                    text += "<td>" + value["price"] + "</td>";
+                                    text += "<td>" + value["date"] + "</td>";
+                                    text += "<td>" + value["traxtype"] + "</td></tr>";
+
+                                });
+                                text += "</table>";
+                        $("#View_Stock_Details").append(text);
+                        console.log(str);
+                    }
+                });
+            $("#Manage_Customer").hide();
+            $(".nav-link").click(function () {
+                var str = $(this).html();
+                if (str == "Manage Customer") {
+                    $("#Dashboard").hide();
+                    $("#Manage_Customer").show();
+                    $("#Customer_Details").empty();
+                    $.ajax(
+                        {
+                            url: '/customer/',
+                            dataType: 'json',
+                            data: JSON.stringify({ name: 'Chandu' }),
+                            success: function (result) {
+                                var str = result;
+                                var text = "<table class='table-responsive-sm table-hover' border=1><tr><th>Name</th><th>Phone</th><th>Address</th><th>BFDue</th><th>BFCredit</th></tr>";
+                                $.each(str, function (key, value) {
+                                    text += "<tr><td>" + value["name"] + "</td>";
+                                    text += "<td>" + value["phone"] + "</td>";
+                                    text += "<td>" + value["address"] + "</td>";
+                                    text += "<td>" + value["bfdue"] + "</td>";
+                                    text += "<td>" + value["bfcredit"] + "</td></tr>";
+                                });
+                                text += "</table>";
+                                $("#Customer_Details").append(text);
+                                console.log(str);
+                            }
+                        });
+                }
+                else {
+
+                    $("#Manage_Customer").hide();
+                    $("#Dashboard").show();
+                    $("#View_Stock_Details").empty();
+                    $.ajax(
+                        {
+                            url: '/stock/',
+                            dataType: 'json',
+                            data: JSON.stringify({ name: 'Chandu' }),
+                            success: function (result) {
+                                var str = result;
+                                var text = "<table class='table-responsive-sm table-hover' border=1><tr><th>Name</th><th>Phone</th><th>Address</th><th>BFDue</th><th>BFCredit</th></tr>";
+                                $.each(str, function (key, value) {
+                                    text += "<tr><td>" + value["name"] + "</td>";
+                                    text += "<td>" + value["address"] + "</td></tr>";
+                                });
+                                text += "</table>";
+                                $("#View_Stock_Details").append(text);
+                                console.log(str);
+                            }
+                        });
+
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-md bg-dark navbar-dark">
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="collapsibleNavbar">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" id="sub-menu">Dashboad</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="sub-menu">Manage Customer</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+    <br>
+
+    <div class="container">
+        <!-- DashBoard -->
+        <div id="Dashboard" class="row">
+            <!-- Stock -->
+            <div id="Stock" class="col">
+                <h2>Stock Details</h2>
+                <div id="View_Stock_Details">
+
+                </div>
+
+            </div>
+            <!-- Add Entry -->
+            <div id="Add_Entry" class="col">
+                <h2>Enter Details</h2>
+                <!-- Add New Customer -->
+                <div id="Add_Stock" class="col">
+                    <h4>Add Sale/Purchase Details</h4>
+                    <!-- Form -->
+                    <div id="display_form">
+                        <form action="/add_entry/" method="POST">
+                            <div class="form-group">
+                                <!-- Customer -->
+                                <label for="product">Customer:</label>
+                                <input type="text" class="form-control" id="customer" name="customer">
+                            </div>
+                            <div class="form-group">
+                                <!-- Name -->
+                                <label for="product">Product:</label>
+                                <input type="text" class="form-control" id="product" name="product">
+                            </div>
+                            <!-- Quantity -->
+                            <div class="form-group">
+                                <label for="quantity">Quantity:</label>
+                                <input type="text" class="form-control" id="quantity" name="quantity">
+                            </div>
+                            <!-- Price -->
+                            <div class="form-group">
+                                <label for="price">Price:</label>
+                                <input type="text" class="form-control" id="price" name="price">
+                            </div>
+                            <!-- Date -->
+                            <div class="form-group">
+                                <label for="date">Date:</label>
+                                <input type="date" class="form-control" id="date" name="date">
+                            </div>
+                            <!-- Type -->
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optradio" value="sale">Sale
+                                </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                    <input type="radio" class="form-check-input" name="optradio" value="purchase">Purchase
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </form>
+                    </div>
+
+                </div>
+
+
+            </div>
+            <!-- View Entry -->
+            <div id="View_Entry" class="col">
+                <h2>Entries</h2>
+
+            </div>
+
+
+        </div>
+        <!-- Manage Customer -->
+        <div id="Manage_Customer" class="row">
+            <!-- View Customer -->
+            <div id="View_Customer" class="col">
+
+                <h2>Customer Details</h2>
+                <div id="Customer_Details">
+
+                </div>
+
+            </div>
+            <!-- Add New Customer -->
+            <div id="Add_Customer" class="col">
+                <h2>Add Customer Details</h2>
+                <!-- Form -->
+                <div id="display_form">
+                    <form action="/addcustomer/" method="POST">
+                        <div class="form-group">
+                            <!-- Name -->
+                            <label for="username">Name:</label>
+                            <input type="text" class="form-control" id="name" name="username">
+                        </div>
+                        <!-- Phone -->
+                        <div class="form-group">
+                            <label for="phone">Phone:</label>
+                            <input type="text" class="form-control" id="phone" name="phone">
+                        </div>
+                        <!-- Address -->
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" class="form-control" id="address" name="address">
+                        </div>
+                        <!-- Before Due Date -->
+                        <div class="form-group">
+                            <label for="bfdue">BFDue:</label>
+                            <input type="text" class="form-control" id="bfdue" name="bfdue">
+                        </div>
+                        <!-- Before Credit -->
+                        <div class="form-group">
+                            <label for="bfcredit">BFCredit:</label>
+                            <input type="text" class="form-control" id="bfcredit" name=bfcredit>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </form>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+</body>
+
+</html>
